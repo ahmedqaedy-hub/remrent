@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ريم الخليج | الفخامة في القيادة</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="ريم الخليج">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: #0f172a; /* Dark Navy */
+            color: #f8fafc;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .premium-gradient {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+        }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+    </style>
+</head>
+<body class="pb-24">
+    
+    <!-- صفحة الرئيسية -->
+    <div id="page-home" class="page active">
+        <header class="sticky top-0 z-50 glass px-6 py-5 flex justify-between items-center rounded-b-[30px]">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">ريم <span class="text-amber-500">الخليج</span></h1>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest">Premium Car Rental</p>
+            </div>
+            <button onclick="showNotifications()" class="w-10 h-10 rounded-full glass flex items-center justify-center text-amber-500">
+                <i class="fas fa-bell"></i>
+            </button>
+        </header>
+
+        <div class="p-6">
+            <!-- Search -->
+            <div class="relative mb-8">
+                <input type="text" oninput="handleSearch(this.value)" placeholder="ابحث عن سيارة أحلامك..." 
+                    class="w-full glass rounded-3xl py-4 pr-12 pl-4 focus:ring-2 focus:ring-amber-500 outline-none transition-all placeholder-slate-500">
+                <i class="fas fa-search absolute right-5 top-5 text-amber-500"></i>
+            </div>
+
+            <!-- أزرار التواصل السريع في الرئيسية -->
+            <div class="flex gap-3 mb-8">
+                <a href="tel:94317788" class="flex-1 glass py-3 rounded-2xl flex items-center justify-center gap-2 border-white/5 active:scale-95 transition-transform">
+                    <i class="fas fa-phone-alt text-amber-500 text-sm"></i>
+                    <span class="text-xs font-bold text-white">اتصل بنا</span>
+                </a>
+                <a href="https://wa.me/96594317788" target="_blank" class="flex-1 glass py-3 rounded-2xl flex items-center justify-center gap-2 border-white/5 active:scale-95 transition-transform">
+                    <i class="fab fa-whatsapp text-green-500 text-lg"></i>
+                    <span class="text-xs font-bold text-white">واتساب</span>
+                </a>
+            </div>
+
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-semibold border-r-4 border-amber-500 pr-3">الأسطول المتاح</h2>
+                <div class="flex items-center gap-3 glass px-3 py-1 rounded-full">
+                    <span class="text-[10px] text-slate-300">المتاح فقط</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="filter-available" onchange="toggleFilter()" class="sr-only peer">
+                        <div class="w-9 h-5 bg-slate-700 rounded-full peer peer-checked:bg-amber-500 after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full"></div>
+                    </label>
+                </div>
+            </div>
+
+            <div id="cars-grid" class="space-y-6"></div>
+        </div>
+    </div>
+
+    <!-- صفحة تسجيل الدخول -->
+    <div id="page-auth" class="page min-h-screen flex flex-col items-center justify-center p-8 bg-slate-900">
+        <div class="w-24 h-24 premium-gradient rounded-[30px] flex items-center justify-center mb-8 shadow-2xl shadow-amber-500/20 rotate-12">
+            <i class="fas fa-key text-white text-4xl -rotate-12"></i>
+        </div>
+        <h2 class="text-3xl font-bold mb-2">مرحباً بك</h2>
+        <p class="text-slate-400 text-center mb-10 text-sm">أدخل رقم جوالك لتجربة قيادة لا تُنسى</p>
+        
+        <div class="w-full max-w-sm space-y-6">
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-amber-500 uppercase tracking-widest mr-2">رقم الجوال</label>
+                <input type="tel" id="user-phone" maxlength="8" placeholder="9XXXXXXX" 
+                    class="w-full glass rounded-2xl py-5 px-6 text-xl tracking-[0.2em] outline-none focus:ring-2 focus:ring-amber-500 transition-all text-center">
+            </div>
+            <button onclick="handleLogin()" class="w-full premium-gradient text-white py-5 rounded-2xl font-bold shadow-xl shadow-amber-600/30 active:scale-95 transition-transform">
+                انطلاق
+            </button>
+        </div>
+    </div>
+
+    <!-- صفحة الملف الشخصي -->
+    <div id="page-profile" class="page p-6">
+        <header class="mb-10">
+            <h2 class="text-3xl font-bold mb-1">حسابي</h2>
+            <div class="h-1 w-12 premium-gradient rounded-full"></div>
+        </header>
+
+        <div class="glass rounded-[40px] p-8 text-center mb-8 border border-white/5 shadow-2xl">
+            <div class="w-24 h-24 mx-auto mb-4 rounded-full p-1 premium-gradient">
+                <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-3xl font-bold text-amber-500" id="user-initial">R</div>
+            </div>
+            <h3 class="text-2xl font-bold mb-1" id="profile-phone-display">90000000</h3>
+            <p class="text-amber-500 text-xs font-semibold tracking-widest uppercase mb-6">VIP MEMBER</p>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass rounded-2xl p-4">
+                    <p class="text-[10px] text-slate-400 mb-1">الحجوزات</p>
+                    <p class="text-xl font-bold" id="user-bookings-count">0</p>
+                </div>
+                <div class="glass rounded-2xl p-4">
+                    <p class="text-[10px] text-slate-400 mb-1">النقاط</p>
+                    <p class="text-xl font-bold text-amber-500">1250</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass rounded-[30px] p-6 border-white/5 mb-6">
+            <h4 class="text-amber-500 font-bold text-sm mb-4 uppercase tracking-widest">تواصل معنا</h4>
+            <div class="space-y-3">
+                <a href="tel:94317788" class="flex justify-between items-center glass p-4 rounded-2xl active:scale-95 transition-transform border-white/5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <span class="text-sm font-bold text-white">اتصال مباشر</span>
+                    </div>
+                    <span class="text-slate-400 font-bold tracking-widest text-sm">94317788</span>
+                </a>
+                
+                <a href="https://wa.me/96594317788" target="_blank" class="flex justify-between items-center glass p-4 rounded-2xl active:scale-95 transition-transform border-white/5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-green-400">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                        </div>
+                        <span class="text-sm font-bold text-white">واتساب</span>
+                    </div>
+                    <i class="fas fa-external-link-alt text-slate-600 text-xs"></i>
+                </a>
+            </div>
+        </div>
+
+        <button onclick="handleLogout()" class="w-full glass border-red-500/20 text-red-400 py-4 rounded-2xl font-semibold active:bg-red-500/10 transition-colors">
+            <i class="fas fa-sign-out-alt ml-2"></i> تسجيل الخروج
+        </button>
+    </div>
+
+    <!-- صفحة سياراتي (الحجوزات) -->
+    <div id="page-cars" class="page p-6">
+        <header class="mb-8 flex justify-between items-end">
+            <div>
+                <h2 class="text-3xl font-bold mb-1">رحلاتي</h2>
+                <div class="h-1 w-12 premium-gradient rounded-full"></div>
+            </div>
+            <i class="fas fa-history text-slate-700 text-2xl"></i>
+        </header>
+        <div id="user-bookings-list" class="space-y-4"></div>
+    </div>
+
+    <!-- صفحة المسؤول (مخفية) -->
+    <div id="page-admin" class="page p-6">
+        <div id="admin-login" class="text-center py-20">
+            <i class="fas fa-shield-alt text-5xl text-slate-700 mb-6"></i>
+            <h2 class="text-2xl font-bold mb-8">منطقة الإدارة</h2>
+            <input type="password" id="admin-pass" placeholder="كلمة المرور" class="w-full glass rounded-2xl py-4 px-6 mb-4 text-center">
+            <button onclick="checkAdminPass()" class="w-full premium-gradient text-white py-4 rounded-2xl font-bold">دخول</button>
+        </div>
+        <div id="admin-content" class="hidden">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold">لوحة التحكم</h2>
+                <button onclick="showAddCarForm()" class="w-12 h-12 glass rounded-full flex items-center justify-center text-green-400"><i class="fas fa-plus"></i></button>
+            </div>
+            <div id="car-form" class="hidden glass p-6 rounded-[30px] mb-8 border-green-500/20">
+                <input type="text" id="car-model" placeholder="اسم السيارة" class="w-full mb-3 glass p-4 rounded-xl outline-none">
+                <input type="number" id="car-price" placeholder="السعر" class="w-full mb-3 glass p-4 rounded-xl outline-none">
+                <input type="text" id="car-image" placeholder="رابط الصورة" class="w-full mb-5 glass p-4 rounded-xl outline-none">
+                <button onclick="saveNewCar()" class="w-full premium-gradient text-white py-4 rounded-xl font-bold">حفظ السيارة</button>
+            </div>
+            <div class="space-y-4" id="admin-cars-list"></div>
+
+            <h3 class="text-xl font-bold mt-12 mb-6 border-r-4 border-amber-500 pr-3">طلبات الحجز الواردة</h3>
+            <div id="admin-bookings-list" class="space-y-4">
+                <div class="text-center py-10 text-slate-500 glass rounded-[30px]">لا توجد طلبات حجز حالياً</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Booking -->
+    <div id="booking-modal" class="fixed inset-0 z-[60] hidden flex items-end justify-center">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="glass w-full rounded-t-[40px] p-8 relative transition-transform duration-500 translate-y-full border-t border-white/10">
+            <div class="w-12 h-1 bg-slate-600 rounded-full mx-auto mb-8"></div>
+            <h3 class="text-2xl font-bold mb-2 text-center text-white" id="modal-title"></h3>
+            <div id="modal-details" class="glass rounded-2xl p-6 mb-8 text-slate-300 text-center border-amber-500/20"></div>
+            <div class="flex gap-4">
+                <button onclick="closeModal()" class="flex-1 glass text-slate-400 py-5 rounded-2xl font-bold">إلغاء</button>
+                <button onclick="confirmBooking()" class="flex-[2] premium-gradient text-white py-5 rounded-2xl font-bold shadow-xl shadow-amber-600/30">تأكيد الحجز</button>
+            </div>
+            <div class="safe-area-bottom mt-6"></div>
+        </div>
+    </div>
+
+    <!-- Image Preview -->
+    <div id="image-preview-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4">
+        <button onclick="closeImagePreview()" class="absolute top-8 right-8 text-white glass w-12 h-12 rounded-full flex items-center justify-center"><i class="fas fa-times text-xl"></i></button>
+        <img id="full-image" src="" class="max-w-full max-h-[80vh] rounded-[30px] shadow-2xl ring-1 ring-white/10 shadow-amber-500/10">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 glass px-8 py-4 flex justify-around items-center z-50 rounded-t-[35px] safe-area-bottom border-t border-white/5">
+        <button onclick="navigateTo('home', this)" class="nav-btn flex flex-col items-center text-amber-500 transition-all duration-300">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-[9px] mt-1 font-bold tracking-tighter">الرئيسية</span>
+        </button>
+        <button onclick="navigateTo('cars', this)" class="nav-btn flex flex-col items-center text-slate-500 transition-all duration-300">
+            <i class="fas fa-calendar-alt text-xl"></i>
+            <span class="text-[9px] mt-1 font-bold tracking-tighter">رحلاتي</span>
+        </button>
+        <button onclick="navigateTo('profile', this)" class="nav-btn flex flex-col items-center text-slate-500 transition-all duration-300">
+            <i class="fas fa-user-circle text-xl"></i>
+            <span class="text-[9px] mt-1 font-bold tracking-tighter">حسابي</span>
+        </button>
+        <button onclick="navigateTo('admin', this)" class="nav-btn flex flex-col items-center text-slate-800 transition-all duration-300">
+            <i class="fas fa-gem text-xl"></i>
+            <span class="text-[9px] mt-1 font-bold tracking-tighter">الإدارة</span>
+        </button>
+    </nav>
+
+    <!-- أزرار التواصل العائمة -->
+    <div class="fixed bottom-28 left-6 z-50 flex flex-col gap-3">
+        <a href="https://wa.me/96594317788" target="_blank" class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white shadow-2xl animate-bounce">
+            <i class="fab fa-whatsapp text-2xl"></i>
+        </a>
+        <a href="tel:94317788" class="w-12 h-12 premium-gradient rounded-full flex items-center justify-center text-white shadow-2xl">
+            <i class="fas fa-phone-alt"></i>
+        </a>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
