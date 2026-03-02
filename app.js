@@ -284,7 +284,7 @@ function renderCars() {
             <div class="relative h-64 cursor-pointer" onclick="openImagePreview('${car.image}')">
                 <img src="${car.image}" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
-                <div class="absolute bottom-6 right-8"><span class="text-amber-500 font-bold text-2xl">${car.price}</span><span class="text-[10px] text-slate-400 mr-1 text-xs">ر.س</span></div>
+                <div class="absolute bottom-6 right-8"><span class="text-amber-500 font-bold text-2xl">${car.price}</span><span class="text-[10px] text-slate-400 mr-1 text-xs">ر.ع</span></div>
             </div>
             <div class="p-8">
                 <h3 class="text-xl font-bold mb-4 text-white">${car.model}</h3>
@@ -303,7 +303,7 @@ function bookCar(id) {
     const car = cars.find(c => c.id === id);
     const modal = document.getElementById('booking-modal');
     document.getElementById('modal-title').innerText = car.model;
-    document.getElementById('modal-details').innerHTML = `السعر اليومي: ${car.price} ريال. سيتم إرسال الطلب للموافقة.`;
+    document.getElementById('modal-details').innerHTML = `السعر اليومي: ${car.price} ريال عماني. سيتم إرسال الطلب للموافقة.`;
     modal.classList.remove('hidden');
     setTimeout(() => modal.querySelector('.glass').style.transform = 'translateY(0)', 10);
 }
@@ -331,7 +331,7 @@ function handleSearch(q) {
             <div class="relative h-64 cursor-pointer" onclick="openImagePreview('${car.image}')">
                 <img src="${car.image}" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
-                <div class="absolute bottom-6 right-8"><span class="text-amber-500 font-bold text-2xl">${car.price}</span><span class="text-[10px] text-slate-400 mr-1 text-xs">ر.س</span></div>
+                <div class="absolute bottom-6 right-8"><span class="text-amber-500 font-bold text-2xl">${car.price}</span><span class="text-[10px] text-slate-400 mr-1 text-xs">ر.ع</span></div>
             </div>
             <div class="p-8">
                 <h3 class="text-xl font-bold mb-4 text-white">${car.model}</h3>
